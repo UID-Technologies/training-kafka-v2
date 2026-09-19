@@ -217,7 +217,7 @@ Set-Location C:\kafka-labs
 Download Kafka 3.8.1 (Scala 2.13). If your trainer provides a different 3.8.x or 3.9.x package, use that file instead.
 
 ```powershell
-$kafkaUrl = "https://downloads.apache.org/kafka/3.8.1/kafka_2.13-3.8.1.tgz"
+$kafkaUrl = "https://archive.apache.org/dist/kafka/3.8.1/kafka_2.13-3.8.1.tgz"
 $kafkaZip = "C:\kafka-labs\kafka_2.13-3.8.1.tgz"
 
 Invoke-WebRequest -Uri $kafkaUrl -OutFile $kafkaZip
