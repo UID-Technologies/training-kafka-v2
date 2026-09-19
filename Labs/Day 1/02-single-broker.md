@@ -31,9 +31,16 @@ At the end of this lab, Kafka is running but no business topic exists yet. Produ
 Verify the install before changing any config:
 
 ```powershell
-Test-Path C:\kafka-labs\kafka\bin\windows\kafka-server-start.bat
-Test-Path C:\kafka-labs\data\zookeeper
-Test-Path C:\kafka-labs\data\kafka-0
+# Set the root folder used for all Kafka labs
+$location = "C:\kafka-labs"
+
+Write-Host "Kafka Lab Location: $location"
+```
+
+```powershell
+Test-Path "$location\kafka\bin\windows\kafka-server-start.bat"
+Test-Path "$location\data\zookeeper"
+Test-Path "$location\data\kafka-0"
 ```
 
 Both `Test-Path` results for the data folders must be `True`.
@@ -114,7 +121,7 @@ If either command prints a `LISTENING` row, another process owns that port. Stop
 Confirm Kafka home:
 
 ```powershell
-cd C:\kafka-labs\kafka
+Set-Location "$location\kafka"
 Get-ChildItem .\config\zookeeper.properties
 Get-ChildItem .\config\server.properties
 ```
@@ -184,10 +191,12 @@ Record the values you used:
 In **Terminal 1**:
 
 ```powershell
-cd C:\kafka-labs\kafka
+$location = "C:\kafka-labs"
+
+Set-Location "$location\kafka"
 
 .\bin\windows\zookeeper-server-start.bat `
-  .\config\zookeeper.properties
+    .\config\zookeeper.properties
 ```
 
 Leave this terminal open. ZooKeeper is a long-running process.
@@ -213,10 +222,12 @@ Do not start the broker if ZooKeeper is not listening.
 Open **Terminal 2**:
 
 ```powershell
-cd C:\kafka-labs\kafka
+$location = "C:\kafka-labs"
+
+Set-Location "$location\kafka"
 
 .\bin\windows\kafka-server-start.bat `
-  .\config\server.properties
+    .\config\server.properties
 ```
 
 Leave this terminal open.
@@ -245,11 +256,13 @@ You should see a `LISTENING` entry for port 9092.
 Open **Terminal 5** as an admin/CLI terminal. Do not use Terminal 1 or 2.
 
 ```powershell
-cd C:\kafka-labs\kafka
+$location = "C:\kafka-labs"
+
+Set-Location "$location\kafka"
 
 .\bin\windows\kafka-topics.bat `
-  --list `
-  --bootstrap-server localhost:9092
+    --list `
+    --bootstrap-server localhost:9092
 ```
 
 A successful command returns without a connection error. The topic list may be empty or may show only internal topics. That is acceptable.
@@ -261,8 +274,8 @@ If the command hangs or reports `Connection to node -1` / `Broker may not be ava
 ### Step 6 – Confirm Data Files Were Created
 
 ```powershell
-Get-ChildItem C:\kafka-labs\data\zookeeper
-Get-ChildItem C:\kafka-labs\data\kafka-0
+Get-ChildItem "$location\data\zookeeper"
+Get-ChildItem "$location\data\kafka-0"
 ```
 
 ZooKeeper should now have files such as `myid` is **not** required for a standalone ZooKeeper. You should see ZooKeeper snapshot/log files appear after it has been running.
