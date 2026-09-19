@@ -252,8 +252,8 @@ You should see a folder similar to `kafka_2.13-3.8.1`.
 Rename it to the course standard name:
 
 ```powershell
-Rename-Item -Path C:\kafka-labs\kafka_2.13-3.8.1 -NewName kafka
-Get-ChildItem C:\kafka-labs\kafka
+Rename-Item -Path "$location\kafka_2.13-3.8.1" -NewName "kafka"
+Get-ChildItem "$location\kafka"
 ```
 
 If `C:\kafka-labs\kafka` already exists from an older attempt, stop and ask the trainer before overwriting it.
