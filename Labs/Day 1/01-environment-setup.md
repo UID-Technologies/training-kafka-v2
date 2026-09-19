@@ -104,8 +104,12 @@ Get-Location
 Create the root folder if it does not exist:
 
 ```powershell
-New-Item -ItemType Directory -Force -Path C:\kafka-labs
-Set-Location C:\kafka-labs
+$location = C:\kafka-labs
+```
+
+```powershell
+New-Item -ItemType Directory -Force -Path $location
+Set-Location $location
 Get-ChildItem
 ```
 
@@ -211,14 +215,14 @@ This course uses **Apache Kafka with ZooKeeper**, not Kafka 4.x KRaft-only packa
 In the new PowerShell window:
 
 ```powershell
-Set-Location C:\kafka-labs
+Set-Location $location
 ```
 
 Download Kafka 3.8.1 (Scala 2.13). If your trainer provides a different 3.8.x or 3.9.x package, use that file instead.
 
 ```powershell
 $kafkaUrl = "https://archive.apache.org/dist/kafka/3.8.1/kafka_2.13-3.8.1.tgz"
-$kafkaZip = "C:\kafka-labs\kafka_2.13-3.8.1.tgz"
+$kafkaZip = Join-Path $location "kafka_2.13-3.8.1.tgz"
 
 Invoke-WebRequest -Uri $kafkaUrl -OutFile $kafkaZip
 Get-Item $kafkaZip
@@ -238,7 +242,7 @@ If the Apache download site is blocked, use the archive URL provided by the trai
 Windows 10 and Windows 11 include `tar`.
 
 ```powershell
-Set-Location C:\kafka-labs
+Set-Location $location
 tar -xzf kafka_2.13-3.8.1.tgz
 Get-ChildItem
 ```
