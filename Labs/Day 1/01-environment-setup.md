@@ -292,7 +292,7 @@ Confirm these files exist:
 Open the default config folder:
 
 ```powershell
-Get-ChildItem C:\kafka-labs\kafka\config
+Get-ChildItem "$location\kafka\config"
 ```
 
 Confirm these files exist:
@@ -309,12 +309,13 @@ Confirm these files exist:
 Kafka and ZooKeeper should not write data into the install folder. Create dedicated data directories now.
 
 ```powershell
-New-Item -ItemType Directory -Force -Path C:\kafka-labs\data\zookeeper
-New-Item -ItemType Directory -Force -Path C:\kafka-labs\data\kafka-0
-New-Item -ItemType Directory -Force -Path C:\kafka-labs\data\kafka-1
-New-Item -ItemType Directory -Force -Path C:\kafka-labs\data\kafka-2
-New-Item -ItemType Directory -Force -Path C:\kafka-labs\data\kafka-3
-Get-ChildItem C:\kafka-labs\data
+New-Item -ItemType Directory -Force -Path "$location\data\zookeeper"
+New-Item -ItemType Directory -Force -Path "$location\data\kafka-0"
+New-Item -ItemType Directory -Force -Path "$location\data\kafka-1"
+New-Item -ItemType Directory -Force -Path "$location\data\kafka-2"
+New-Item -ItemType Directory -Force -Path "$location\data\kafka-3"
+
+Get-ChildItem "$location\data"
 ```
 
 Expected:
