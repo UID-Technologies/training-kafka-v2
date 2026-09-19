@@ -274,7 +274,7 @@ licenses
 ### Step 5 – Confirm Windows CLI Scripts
 
 ```powershell
-Get-ChildItem C:\kafka-labs\kafka\bin\windows
+Get-ChildItem "$location\kafka\bin\windows"
 ```
 
 Confirm these files exist:
