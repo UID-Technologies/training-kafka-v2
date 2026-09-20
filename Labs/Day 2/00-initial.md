@@ -311,15 +311,23 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+      # Internal Docker + External Windows listeners
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://localhost:9092
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      # Internal Kafka topics
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+
 
   kafka2:
     image: wurstmeister/kafka
@@ -327,15 +335,21 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9093:9093"
+      - "9093:29093"
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
+
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9093,EXTERNAL://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9093,EXTERNAL://localhost:9093
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+
 
   kafka3:
     image: wurstmeister/kafka
@@ -343,12 +357,17 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9094:9094"
+      - "9094:29094"
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094
+
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9094,EXTERNAL://0.0.0.0:29094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka3:9094,EXTERNAL://localhost:9094
+
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
@@ -357,6 +376,25 @@ services:
 ```bash
 docker compose up -d
 docker ps
+```
+
+### Kafka Command with Docker
+```bash
+# Create Topic
+docker exec kafka1 kafka-topics.sh --create --topic test-topic --bootstrap-server kafka1:9092 --partitions 3 --replication-factor 3
+
+# List Topics
+docker exec kafka1 kafka-topics.sh --list --topic test-topic --bootstrap-server kafka1:9092   
+
+# Describe Topic
+docker exec kafka1 kafka-topics.sh --describe  --topic test-topic --bootstrap-server kafka1:9092
+
+# Start Producer
+docker exec -it kafka1 kafka-console-producer.sh --bootstrap-server kafka1:9092 --topic test-topic
+
+# Start Consumer
+docker exec -it kafka1 kafka-console-consumer.sh  --bootstrap-server kafka1:9092 --topic test-topic --from-beginning
+
 ```
 
 
